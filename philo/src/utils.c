@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:20:19 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/17 15:53:56 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/19 11:06:06 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,15 @@ int	ft_strlen(char *str)
 void	error_init(char *str)
 {
 	write(2, str, ft_strlen(str));
+}
+
+time_t	get_time_ms()
+{
+	time_t			time_in_ms;
+	struct timeval	time;
+
+	if (gettimeofday(&time, NULL))
+		return (0);
+	time_in_ms = time.tv_sec * 1000 + time.tv_usec / 1000;
+	return (time_in_ms);
 }
