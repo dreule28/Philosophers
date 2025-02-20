@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/20 11:52:16 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/20 11:56:29 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,16 @@ t_philo	*set_table(t_shared *data)
 	t_philo	*new_chair;
 	int		i;
 
+	table = NULL;
+	last = NULL;
 	i = 1;
 	while (i <= data->nb_of_philos)
 	{
 		new_chair = add_chair(data, i);
+		if (!new_chair)
+			return (NULL);
 		i++;
-		last = place_chair_at_table(new_chair, table, last);
-		if (!table)
-			table = last;
+		place_chair_at_table(new_chair, &table, &last);
 	}
 	last->right = table;
 	table->left = last;
