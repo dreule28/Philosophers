@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/19 13:20:03 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/20 11:52:16 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,19 @@ t_philo	*add_chair(t_shared *data, int i)
 	return (new_chair);
 }
 
-t_philo	*place_chair_at_table(t_philo *new_chair, t_philo *table, t_philo *last)
+void	place_chair_at_table(t_philo *new_chair, t_philo **table, t_philo **last)
 {
-	if (!table)
+	if (!*table)
 	{
-		table = new_chair;
-		last = new_chair;
+		*table = new_chair;
+		*last = new_chair;
 	}
 	else
 	{
-		new_chair->left = last;
-		last->right = new_chair;
-		last = new_chair;
+		new_chair->left = *last;
+		(*last)->right = new_chair;
+		*last = new_chair;
 	}
-	return (last);
 }
 
 void	get_right_fork(t_philo *table, int nb_of_philos)
