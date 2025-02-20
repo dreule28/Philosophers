@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/20 11:56:29 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/20 12:04:17 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	get_right_fork(t_philo *table, int nb_of_philos)
 	t_philo	*curr;
 
 	curr = table;
-	while (curr != table)
+	while (curr)
 	{
 		if (nb_of_philos == 1)
 		{
@@ -58,6 +58,8 @@ void	get_right_fork(t_philo *table, int nb_of_philos)
 		}
 		curr->r_fork_mutex = &curr->right->l_fork_mutex;
 		curr = curr->right;
+		if (curr == table)
+			return ;
 	}
 }
 
