@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:56:39 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/20 17:11:19 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/21 11:20:19 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	clear_up_table(t_shared *data)
 	{
 		next = curr->right;
 		pthread_mutex_destroy(&curr->l_fork_mutex);
-		free(&curr->l_fork_mutex);
 		free(curr);
 		curr = next;
 	}
