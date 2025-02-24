@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:56:39 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/21 11:20:19 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/24 16:56:18 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,32 @@
 
 void	clear_up_table(t_shared *data)
 {
-	t_philo	*curr;
-	t_philo	*next;
 	int		i;
 
 	if (!data->philosophers)
 		return ;
-	curr = data->philosophers;
 	i = 0;
-	while (i++ < data->nb_of_philos)
+	if (data->fork_mutexes)
 	{
-		next = curr->right;
-		pthread_mutex_destroy(&curr->l_fork_mutex);
-		free(curr);
-		curr = next;
+		while (i++ < data->nb_of_philos)
+		{
+			pthread_mutex_destroy(&data->fork_mutexes[i]);
+		}
+		free(data->fork_mutexes);
 	}
+	free(data->philosophers);
 	pthread_mutex_destroy(&data->log_mutex);
+}
+
+void	cleanup_threads(t_shared *data, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i++ < count)
+	{
+		pthread_join(&data->philosophers->thread[i], NULL);
+		free(&data->philosophers[i]);
+		free(data);
+	}
 }
