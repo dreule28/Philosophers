@@ -6,83 +6,91 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/20 12:04:17 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/24 14:56:55 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*add_chair(t_shared *data, int i)
+t_philo	*init_philo(t_shared *data, int id)
 {
-	t_philo	*new_chair;
+	t_philo	*philo;
 
-	new_chair = malloc(sizeof(t_philo));
-	if (!new_chair)
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
 		return (NULL);
-	new_chair->philo_id = i;
-	if (pthread_mutex_init(&new_chair->l_fork_mutex, NULL))
-		return (NULL);
-	new_chair->times_eaten = 0;
-	new_chair->time_last_meal = data->sim_start;
-	new_chair->right = NULL;
-	new_chair->left = NULL;
-	return (new_chair);
+	philo->data = data;
+	philo->philo_id = id;
+	philo->time_last_meal = data->sim_start;
+	philo->times_eaten = 0;
+	return (philo);
 }
 
-void	place_chair_at_table(t_philo *new_chair, t_philo **table, t_philo **last)
+t_philo	*init_philos(t_shared *data)
 {
-	if (!*table)
-	{
-		*table = new_chair;
-		*last = new_chair;
-	}
-	else
-	{
-		new_chair->left = *last;
-		(*last)->right = new_chair;
-		*last = new_chair;
-	}
-}
+	t_philo	*philos;
+	int		i;
 
-void	get_right_fork(t_philo *table, int nb_of_philos)
-{
-	t_philo	*curr;
-
-	curr = table;
-	while (curr)
+	philos = malloc(data->nb_of_philos * sizeof(t_philo));
+	if (!philos)
+		return (NULL);
+	i = 0;
+	while (i++ < data->nb_of_philos)
 	{
-		if (nb_of_philos == 1)
+		philos[i] = *init_philo(data, i + 1);
+		if (!&philos[i])
 		{
-			curr->r_fork_mutex = NULL;
-			return ;
+			while (i--)
+			{
+				free(&philos[i]);
+				free(philos);
+				return (NULL);
+			}
 		}
-		curr->r_fork_mutex = &curr->right->l_fork_mutex;
-		curr = curr->right;
-		if (curr == table)
-			return ;
 	}
+	return (philos);
+}
+
+bool	init_fork_mutexes(pthread_mutex_t *fork)
+{
+	if (pthread_mutex_init(&fork, NULL))
+		return (false);
+	return (true);
+}
+
+bool	init_forks(t_shared *data)
+{
+	int	i;
+
+	data->fork_mutexes = malloc(data->nb_of_philos * sizeof(pthread_mutex_t));
+	if (!data->fork_mutexes)
+		return (false);
+	i = 0;
+	while (i++ < data->nb_of_philos)
+	{
+		if (!init_fork_mutexes(&data->fork_mutexes[i]))
+		{
+			while (i--)
+				pthread_mutex_destroy(&data->fork_mutexes[i]);
+			free(data->fork_mutexes);
+			return (false);
+		}
+	}
+	return (true);
 }
 
 t_philo	*set_table(t_shared *data)
 {
-	t_philo	*table;
-	t_philo	*last;
-	t_philo	*new_chair;
-	int		i;
+	t_philo	*philosophers;
 
-	table = NULL;
-	last = NULL;
-	i = 1;
-	while (i <= data->nb_of_philos)
+	philosophers = init_philos(data);
+	if (!philosophers)
+		return (NULL);
+	if (!init_forks(data))
 	{
-		new_chair = add_chair(data, i);
-		if (!new_chair)
-			return (NULL);
-		i++;
-		place_chair_at_table(new_chair, &table, &last);
+		free(philosophers);
+		return (NULL);
 	}
-	last->right = table;
-	table->left = last;
-	get_right_fork(table, data->nb_of_philos);
-	return (table);
+	data->philosophers = philosophers;
+	return (philosophers);
 }
