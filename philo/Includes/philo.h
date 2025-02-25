@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:44:02 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/24 14:57:08 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/25 13:58:23 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,46 @@ typedef struct s_philo
 	int				philo_id;
 	int				times_eaten;
 	time_t			time_last_meal;
-	pthread_t		thread_id;
+	pthread_t		thread;
 	struct s_shared	*data;
 }	t_philo;
 
 //Functions -- BEGIN
+
+//Parsing -- BEGIN
 bool	check_args_and_init(char **argv, t_shared *data);
+void	correct_usage(void);
+//Parsing -- END
+
+//Utils -- BEGIN
 bool	is_not_nb(char *argv);
 int		ft_atoi(const char *str);
 void	error_init(char *str);
 int		ft_strlen(char *str);
 time_t	get_time_ms(void);
+void	log_action(t_shared *data, int philo_id, char *log_message);
+//Utils -- END
+
+//Initing -- BEGIN
 t_philo	*set_table(t_shared *data);
-void	get_right_fork(t_philo *table, int nb_of_philos);
-t_philo	*place_chair_at_table(t_philo *new_chair,
-			t_philo *table, t_philo *last);
-t_philo	*add_chair(t_shared *data, int i);
+bool	init_forks(t_shared *data);
+bool	init_fork_mutexes(pthread_mutex_t *fork);
+t_philo	*init_philos(t_shared *data);
+t_philo	*init_philo(t_shared *data, int id);
+//Initing -- END
+
+//Threads -- BEGIN
+void	create_threads(t_shared *data);
+void	*dining_routine(void *arg);
+void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork,
+								int right_fork);
+//Threads -- END
+
+//Cleaning -- BEGIN
+void	clear_up_table(t_shared *data);
+void	cleanup_threads(t_shared *data, int count);
+//Cleaning -- END
+
 //Functions -- END
 
 #endif
