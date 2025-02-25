@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:37:57 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/19 11:22:07 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/25 16:20:27 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	is_not_nb(char *argv)
 	return (false);
 }
 
-int	init_args(char *argv, t_shared *data)
+int	init_args(char **argv, t_shared *data)
 {
 	data->nb_of_philos = ft_atoi(argv[1]);
 	data->time_to_die = ft_atoi(argv[2]);
@@ -35,8 +35,9 @@ int	init_args(char *argv, t_shared *data)
 	if (argv[5])
 		data->nb_of_meals = ft_atoi(argv[5]);
 	else
-		data->nb_of_meals = 0;
+		data->nb_of_meals = -1;
 	data->sim_start = get_time_ms();
+	return (1);
 }
 
 bool	check_args_and_init(char **argv, t_shared *data)
