@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:46:11 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/26 13:41:44 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/26 14:29:02 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,13 @@ void	custom_sleep(t_shared *data, long duration_in_ms)
 		usleep(1000);
 		elapsed_time = get_time_ms() + start_time;
 	}
+}
+
+int	*philo_sleeps(t_shared *data, t_philo *philo)
+{
+	log_action(data, philo->philo_id, "is sleeping");
+	custom_sleep(data, data->time_to_sleep);
+	if (simulation_stopped(data))
+		return (0);
+	return (1);
 }
