@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/24 14:56:55 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/26 18:49:35 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_philo	*init_philo(t_shared *data, int id)
 t_philo	*init_philos(t_shared *data)
 {
 	t_philo	*philos;
+	t_philo	*temp;
 	int		i;
 
 	philos = malloc(data->nb_of_philos * sizeof(t_philo));
@@ -37,23 +38,21 @@ t_philo	*init_philos(t_shared *data)
 	i = 0;
 	while (i++ < data->nb_of_philos)
 	{
-		philos[i] = *init_philo(data, i + 1);
-		if (!&philos[i])
+		temp = init_philo(data, i);
+		if (!temp)
 		{
-			while (i--)
-			{
-				free(&philos[i]);
-				free(philos);
-				return (NULL);
-			}
+			free(temp);
+			return (NULL);
 		}
+		philos[i] = *temp;
+		free(temp);
 	}
 	return (philos);
 }
 
 bool	init_fork_mutexes(pthread_mutex_t *fork)
 {
-	if (pthread_mutex_init(&fork, NULL))
+	if (pthread_mutex_init(fork, NULL))
 		return (false);
 	return (true);
 }
