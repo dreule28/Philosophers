@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:46:11 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/25 15:16:13 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/26 13:41:44 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,18 @@ bool	simulation_stopped(t_shared *data)
 	{
 		pthread_mutex_unlock(&data->sim_start);
 		return (false);
+	}
+}
+
+void	custom_sleep(t_shared *data, long duration_in_ms)
+{
+	long	start_time;
+	long	elapsed_time;
+
+	start_time = get_time_ms();
+	while (elapsed_time < duration_in_ms && !simulation_stopped(data))
+	{
+		usleep(1000);
+		elapsed_time = get_time_ms() + start_time;
 	}
 }
