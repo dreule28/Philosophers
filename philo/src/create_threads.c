@@ -6,13 +6,67 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/24 16:53:16 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/26 18:56:07 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*routine(void *arg)
+int	chose_forks(t_shared *data, t_philo *philo, int left_fork, int right_fork)
+{
+	if (philo->philo_id % 2 == 0)
+	{
+		pthread_mutex_lock(&data->fork_mutexes[right_fork]);
+		log_action(data, philo->philo_id, "has taken a fork");
+		if (simulation_stopped(data))
+		{
+			pthread_mutex_unlock(&data->fork_mutexes[right_fork]);
+			return (0);
+		}
+		pthread_mutex_lock(&data->fork_mutexes[left_fork]);
+		log_action(data, philo->philo_id, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(&data->fork_mutexes[left_fork]);
+		log_action(data, philo->philo_id, "has taken a fork");
+		if (simulation_stopped(data))
+		{
+			pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
+			return (0);
+		}
+		pthread_mutex_lock(&data->fork_mutexes[right_fork]);
+		log_action(data, philo->philo_id, "has taken a fork");
+	}
+	return (1);
+}
+
+int	philo_eats(t_shared *data, t_philo *philo)
+{
+	log_action(data, philo->philo_id, "is eating");
+	philo->time_last_meal = get_time_ms();
+	philo->times_eaten++;
+	if (data->nb_of_meals > 0 && philo->times_eaten >= data->nb_of_meals)
+	{
+		pthread_mutex_lock(&data->status_mutex);
+		data->philos_done_eating++;
+		if (data->philos_done_eating >= data->nb_of_philos)
+			data->sim_stop = 1;
+		pthread_mutex_unlock(&data->status_mutex);
+	}
+	custom_sleep(data, 1);
+	if (simulation_stopped(data))
+		return (0);
+	return (1);
+}
+
+void	release_forks(t_shared *data, int left_fork, int right_fork)
+{
+	pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
+	pthread_mutex_unlock(&data->fork_mutexes[right_fork]);
+}
+
+void	*dining_routine(void *arg)
 {
 	t_philo		*philo;
 	t_shared	*data;
@@ -23,39 +77,20 @@ void	*routine(void *arg)
 	data = philo->data;
 	left_fork = philo->philo_id - 1;
 	right_fork = philo->philo_id % data->nb_of_philos;
-	usleep(1000);
-	while (!data->sim_stop)
+	usleep((philo->philo_id % 2) * 500);
+	if (data->nb_of_philos == 1)
+		return (handle_one_philosopher(data, philo, left_fork), NULL);
+	while (!simulation_stopped(data))
 	{
-		//left fork
-		pthread_mutex_lock(&data->fork_mutexes[left_fork]);
-		pthread_mutex_lock(&data->log_mutex);
-		printf("%ld %d has taken a fork\n", get_time_ms() - data->sim_start, philo->philo_id);
-		pthread_mutex_unlock(&data->log_mutex);
-		//right fork
-		pthread_mutex_lock(&data->fork_mutexes[right_fork]);
-		pthread_mutex_lock(&data->log_mutex);
-		printf("%ld %d has taken a fork\n", get_time_ms() - data->sim_start, philo->philo_id);
-		pthread_mutex_unlock(&data->log_mutex);
-		//eating
-		pthread_mutex_lock(&data->log_mutex);
-		printf("%ld %d is eating\n", get_time_ms() - data->sim_start, philo->philo_id);
-		pthread_mutex_unlock(&data->log_mutex);
-		//update last_time
-		philo->time_last_meal = get_time_ms();
-		philo->times_eaten++;
+		log_action(data, philo->philo_id, "is thinking");
+		if (!chose_forks(data, philo, left_fork, right_fork))
+			break ;
+		if (!philo_eats(data, philo))
+			break ;
 		usleep(data->time_to_eat * 1000);
-		//release forks
-		pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
-		pthread_mutex_unlock(&data->fork_mutexes[right_fork]);
-		//sleeping
-		pthread_mutex_lock(&data->log_mutex);
-		printf("%ld %d is sleeping\n", get_time_ms() - data->sim_start, philo->philo_id);
-		pthread_mutex_unlock(&data->log_mutex);
-		usleep(data->time_to_sleep * 1000);
-		//thinking
-		pthread_mutex_lock(&data->log_mutex);
-		printf("%ld %d is thinking\n", get_time_ms() - data->sim_start, philo->philo_id);
-		pthread_mutex_unlock(&data->log_mutex);
+		release_forks(data, left_fork, right_fork);
+		if (!philo_sleeps(data, philo))
+			break ;
 	}
 	return (NULL);
 }
@@ -67,7 +102,8 @@ void	create_threads(t_shared *data)
 	i = 0;
 	while (i++ < data->nb_of_philos)
 	{
-		if (pthread_create(&data->philosophers[i].thread, NULL, &routine, (void *)&data->philosophers[i]))
+		if (pthread_create(&data->philosophers[i].thread, NULL, &dining_routine,
+							 (void *)&data->philosophers[i]))
 		{
 			printf("Error creating threads!");
 			cleanup_threads(data, i);
