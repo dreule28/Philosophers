@@ -47,7 +47,7 @@ bool	init_forks(t_shared *data)
 	if (!data->fork_mutexes)
 		return (false);
 	i = 0;
-	while (i++ < data->nb_of_philos)
+	while (i < data->nb_of_philos)
 	{
 		if (!init_fork_mutexes(&data->fork_mutexes[i]))
 		{
@@ -56,6 +56,7 @@ bool	init_forks(t_shared *data)
 			free(data->fork_mutexes);
 			return (false);
 		}
+		i++;
 	}
 	return (true);
 }
@@ -72,6 +73,7 @@ t_philo	*set_table(t_shared *data)
 		free(philosophers);
 		return (NULL);
 	}
+
 	data->philosophers = philosophers;
 	return (philosophers);
 }
