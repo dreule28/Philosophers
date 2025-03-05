@@ -62,6 +62,8 @@ void	error_init(char *str);
 int		ft_strlen(char *str);
 time_t	get_time_ms(void);
 void	log_action(t_shared *data, int philo_id, char *log_message);
+bool	simulation_stopped(t_shared *data);
+void	custom_sleep(t_shared *data, long duration_in_ms);
 //Utils -- END
 
 //Initing -- BEGIN
@@ -75,8 +77,11 @@ t_philo	*init_philo(t_shared *data, int id);
 //Threads -- BEGIN
 void	create_threads(t_shared *data);
 void	*dining_routine(void *arg);
-void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork,
-								int right_fork);
+void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork);
+int		chose_forks(t_shared *data, t_philo *philo, int left_fork, int right_fork);
+int		philo_eats(t_shared *data, t_philo *philo);
+int		philo_sleeps(t_shared *data, t_philo *philo);
+void	release_forks(t_shared *data, int left_fork, int right_fork);
 //Threads -- END
 
 //Cleaning -- BEGIN
