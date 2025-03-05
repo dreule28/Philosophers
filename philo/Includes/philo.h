@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:44:02 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/26 19:03:40 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:17:18 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ t_philo	*init_philo(t_shared *data, int id);
 void	create_threads(t_shared *data);
 void	*dining_routine(void *arg);
 void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork);
-int		chose_forks(t_shared *data, t_philo *philo, int left_fork, int right_fork);
+int		chose_forks(t_shared *data, t_philo *philo, int left_fork,
+			int right_fork);
 int		philo_eats(t_shared *data, t_philo *philo);
 int		philo_sleeps(t_shared *data, t_philo *philo);
 void	release_forks(t_shared *data, int left_fork, int right_fork);
