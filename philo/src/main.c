@@ -70,6 +70,19 @@ int	main(int argc, char **argv)
 		return (correct_usage(), 1);
 	if (!check_args_and_init(argv, &data))
 		return (1);
+	if (pthread_mutex_init(&data.log_mutex, NULL) != 0 ||
+		pthread_mutex_init(&data.stop_mutex, NULL) != 0 ||
+		pthread_mutex_init(&data.status_mutex, NULL) != 0)
+	{
+		printf("Failed to initialize mutexes\n");
+		return (1);
+	}
+	data.philosophers = set_table(&data);
+	if (!data.philosophers)
+		return (1);
+	create_threads(&data);
+	clear_up_table(&data);
+	return (0);
 }
 
 // dorker valgrind --tool=hellgrind
