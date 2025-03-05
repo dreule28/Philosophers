@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 15:09:12 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 16:15:19 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	philo_eats(t_shared *data, t_philo *philo)
 	log_action(data, philo->philo_id, "is eating");
 	philo->time_last_meal = get_time_ms();
 	philo->times_eaten++;
+	pthread_mutex_lock(&data->stop_mutex);
 	if (data->nb_of_meals > 0 && philo->times_eaten >= data->nb_of_meals)
 	{
-		pthread_mutex_lock(&data->stop_mutex);
 		data->philos_done_eating++;
 		if (data->philos_done_eating >= data->nb_of_philos)
 			data->sim_stop = 1;
-		pthread_mutex_unlock(&data->stop_mutex);
 	}
+	pthread_mutex_unlock(&data->stop_mutex);
 	custom_sleep(data, 1);
 	if (simulation_stopped(data))
 		return (0);
