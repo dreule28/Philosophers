@@ -67,7 +67,7 @@ int	main(int argc, char **argv)
 	t_shared	data;
 
 	if (argc < 5 || argc > 6)
-		return (printf("Too many or too few Arguments!\n"), 1);
+		return (correct_usage(), 1);
 	if (!check_args_and_init(argv, &data))
 		return (1);
 }
