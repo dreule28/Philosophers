@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:37:57 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/25 16:20:27 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 16:31:45 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	init_args(char **argv, t_shared *data)
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
+	data->philos_done_eating = 0;
+	data->sim_stop = false;
 	if (argv[5])
 		data->nb_of_meals = ft_atoi(argv[5]);
 	else
