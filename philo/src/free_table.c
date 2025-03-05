@@ -40,10 +40,11 @@ void	cleanup_threads(t_shared *data, int count)
 	int	i;
 
 	i = 0;
-	while (i++ < count)
+	while (i < count)
 	{
-		pthread_join(&data->philosophers->thread[i], NULL);
-		free(&data->philosophers[i]);
-		free(data);
+		if (pthread_join(data->philosophers[i].thread, NULL))
+			printf("Failed to join threads\n");
+		i++;
 	}
+	free(data->philosophers);
 }
