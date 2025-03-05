@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:56:39 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/24 16:56:18 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 16:34:21 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ void	clear_up_table(t_shared *data)
 	i = 0;
 	if (data->fork_mutexes)
 	{
-		while (i++ < data->nb_of_philos)
+		while (i < data->nb_of_philos)
 		{
-			pthread_mutex_destroy(&data->fork_mutexes[i]);
+			if (pthread_mutex_destroy(&data->fork_mutexes[i]))
+				printf("Failed to destroy mutex\n");
+			i++;
 		}
 		free(data->fork_mutexes);
 	}
 	free(data->philosophers);
 	pthread_mutex_destroy(&data->log_mutex);
+	pthread_mutex_destroy(&data->status_mutex);
+	pthread_mutex_destroy(&data->stop_mutex);
 }
 
 void	cleanup_threads(t_shared *data, int count)
