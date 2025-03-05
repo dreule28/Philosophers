@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 15:06:28 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 15:07:58 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	*dining_routine(void *arg)
 	data = philo->data;
 	left_fork = philo->philo_id - 1;
 	right_fork = philo->philo_id % data->nb_of_philos;
-	usleep((philo->philo_id % 2) * 500);
+	// usleep(philo->philo_id * 1000);
 	if (data->nb_of_philos == 1)
 		return (handle_one_philosopher(data, philo, left_fork), NULL);
 	while (!simulation_stopped(data))
@@ -86,8 +86,10 @@ void	*dining_routine(void *arg)
 		if (!chose_forks(data, philo, left_fork, right_fork))
 			break ;
 		if (!philo_eats(data, philo))
+		{
+			release_forks(data, left_fork, right_fork);
 			break ;
-		usleep(data->time_to_eat * 1000);
+		}
 		release_forks(data, left_fork, right_fork);
 		if (!philo_sleeps(data, philo))
 			break ;
