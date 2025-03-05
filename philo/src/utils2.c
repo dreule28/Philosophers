@@ -50,14 +50,15 @@ void	custom_sleep(t_shared *data, long duration_in_ms)
 	long	elapsed_time;
 
 	start_time = get_time_ms();
+	elapsed_time = 0;
 	while (elapsed_time < duration_in_ms && !simulation_stopped(data))
 	{
 		usleep(1000);
-		elapsed_time = get_time_ms() + start_time;
+		elapsed_time = get_time_ms() - start_time;
 	}
 }
 
-int	*philo_sleeps(t_shared *data, t_philo *philo)
+int	philo_sleeps(t_shared *data, t_philo *philo)
 {
 	log_action(data, philo->philo_id, "is sleeping");
 	custom_sleep(data, data->time_to_sleep);
