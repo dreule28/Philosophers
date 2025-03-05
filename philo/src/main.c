@@ -55,7 +55,10 @@ bool	check_args_and_init(char **argv, t_shared *data)
 	if (argv[5] && (ft_atoi(argv[5]) <= 0 || is_not_nb(argv[5])))
 		return (error_init("Invalid number_of_meals!\n"), false);
 	if (!init_args(argv, data))
+	{
+		free(data);
 		return (false);
+	}
 	return (true);
 }
 
