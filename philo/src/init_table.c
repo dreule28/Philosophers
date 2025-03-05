@@ -6,46 +6,28 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/26 18:49:35 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 16:50:32 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*init_philo(t_shared *data, int id)
-{
-	t_philo	*philo;
-
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->data = data;
-	philo->philo_id = id;
-	philo->time_last_meal = data->sim_start;
-	philo->times_eaten = 0;
-	return (philo);
-}
-
 t_philo	*init_philos(t_shared *data)
 {
 	t_philo	*philos;
-	t_philo	*temp;
 	int		i;
 
 	philos = malloc(data->nb_of_philos * sizeof(t_philo));
 	if (!philos)
 		return (NULL);
 	i = 0;
-	while (i++ < data->nb_of_philos)
+	while (i < data->nb_of_philos)
 	{
-		temp = init_philo(data, i);
-		if (!temp)
-		{
-			free(temp);
-			return (NULL);
-		}
-		philos[i] = *temp;
-		free(temp);
+		philos[i].data = data;
+		philos[i].philo_id = i + 1;
+		philos[i].time_last_meal = get_time_ms();
+		philos[i].times_eaten = 0;
+		i++;
 	}
 	return (philos);
 }
