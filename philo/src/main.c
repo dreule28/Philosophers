@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:37:57 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 16:31:45 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:09:40 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ int	main(int argc, char **argv)
 		return (correct_usage(), 1);
 	if (!check_args_and_init(argv, &data))
 		return (1);
-	if (pthread_mutex_init(&data.log_mutex, NULL) != 0 ||
-		pthread_mutex_init(&data.stop_mutex, NULL) != 0 ||
-		pthread_mutex_init(&data.status_mutex, NULL) != 0)
+	if (pthread_mutex_init(&data.log_mutex, NULL) != 0
+		||pthread_mutex_init(&data.stop_mutex, NULL) != 0
+		|| pthread_mutex_init(&data.status_mutex, NULL) != 0)
 	{
 		printf("Failed to initialize mutexes\n");
 		return (1);
@@ -85,5 +85,8 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-// dorker valgrind --tool=hellgrind
+// dorker valgrind --tool=helgrind
+// dorker valgrind --tool=drd
+//--leak-check=full --show-leak-kinds=all --track-origins=yes
 // test values 5 800 200 200 7
+// test values 4 410 200 200

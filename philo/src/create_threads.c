@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 16:15:19 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:16:53 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void	*dining_routine(void *arg)
 	data = philo->data;
 	left_fork = philo->philo_id - 1;
 	right_fork = philo->philo_id % data->nb_of_philos;
-	// usleep(philo->philo_id * 1000);
 	if (data->nb_of_philos == 1)
 		return (handle_one_philosopher(data, philo, left_fork), NULL);
 	while (!simulation_stopped(data))
@@ -105,7 +104,7 @@ void	create_threads(t_shared *data)
 	while (i < data->nb_of_philos)
 	{
 		if (pthread_create(&data->philosophers[i].thread, NULL, &dining_routine,
-							(void *)&data->philosophers[i]))
+				(void *)&data->philosophers[i]))
 		{
 			printf("Error creating threads!");
 			cleanup_threads(data, i);

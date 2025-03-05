@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 16:50:32 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:09:22 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ t_philo	*set_table(t_shared *data)
 		free(philosophers);
 		return (NULL);
 	}
-
 	data->philosophers = philosophers;
 	return (philosophers);
 }
