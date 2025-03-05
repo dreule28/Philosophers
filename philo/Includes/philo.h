@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:44:02 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/25 13:58:23 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/26 19:03:40 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@ typedef struct s_shared
 {
 	int				nb_of_philos;
 	int				nb_of_meals;
+	int				philos_done_eating;
 	time_t			time_to_die;
 	time_t			time_to_eat;
 	time_t			time_to_sleep;
 	time_t			sim_start;
 	pthread_mutex_t	log_mutex;
+	pthread_mutex_t	stop_mutex;
+	pthread_mutex_t	status_mutex;
 	bool			sim_stop;
 	pthread_mutex_t	*fork_mutexes;
 	struct s_philo	*philosophers;
