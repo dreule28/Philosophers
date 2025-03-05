@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:20:19 by dreule            #+#    #+#             */
-/*   Updated: 2025/02/19 11:06:06 by dreule           ###   ########.fr       */
+/*   Updated: 2025/02/24 16:48:23 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	error_init(char *str)
 	write(2, str, ft_strlen(str));
 }
 
-time_t	get_time_ms()
+time_t	get_time_ms(void)
 {
 	time_t			time_in_ms;
 	struct timeval	time;
@@ -63,4 +63,10 @@ time_t	get_time_ms()
 		return (0);
 	time_in_ms = time.tv_sec * 1000 + time.tv_usec / 1000;
 	return (time_in_ms);
+}
+
+void	correct_usage(void)
+{
+	printf("Usage: ./philosophers <nb_of_philos>  <time_to_die> ");
+	printf("<time_to_eat> <time_to_sleep> [nb_of_meals]\n");
 }
