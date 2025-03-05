@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 15:07:58 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/05 15:09:12 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,23 +102,25 @@ void	create_threads(t_shared *data)
 	int		i;
 
 	i = 0;
-	while (i++ < data->nb_of_philos)
+	while (i < data->nb_of_philos)
 	{
 		if (pthread_create(&data->philosophers[i].thread, NULL, &dining_routine,
-							 (void *)&data->philosophers[i]))
+							(void *)&data->philosophers[i]))
 		{
 			printf("Error creating threads!");
 			cleanup_threads(data, i);
 			return ;
 		}
+		i++;
 	}
 	i = 0;
-	while (i++ < data->nb_of_philos)
+	while (i < data->nb_of_philos)
 	{
 		if (pthread_join(data->philosophers[i].thread, NULL))
 		{
 			printf("Error joining threads!");
 			return ;
 		}
+		i++;
 	}
 }
