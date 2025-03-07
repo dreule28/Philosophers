@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 17:16:53 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/06 14:24:12 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,12 @@ int	chose_forks(t_shared *data, t_philo *philo, int left_fork, int right_fork)
 int	philo_eats(t_shared *data, t_philo *philo)
 {
 	log_action(data, philo->philo_id, "is eating");
+	pthread_mutex_lock(&data->status_mutex);
 	philo->time_last_meal = get_time_ms();
+	pthread_mutex_unlock(&data->status_mutex);
+	pthread_mutex_lock(&data->status_mutex);
 	philo->times_eaten++;
+	pthread_mutex_unlock(&data->status_mutex);
 	pthread_mutex_lock(&data->stop_mutex);
 	if (data->nb_of_meals > 0 && philo->times_eaten >= data->nb_of_meals)
 	{
