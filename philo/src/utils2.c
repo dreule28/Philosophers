@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:46:11 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 17:09:56 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/07 16:25:20 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,11 @@ void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork)
 
 bool	simulation_stopped(t_shared *data)
 {
+	bool	stopped;
 	pthread_mutex_lock(&data->stop_mutex);
-	if (data->sim_stop)
-	{
-		pthread_mutex_unlock(&data->stop_mutex);
-		return (true);
-	}
-	else
-	{
-		pthread_mutex_unlock(&data->stop_mutex);
-		return (false);
-	}
+	stopped = data->sim_stop;
+	pthread_mutex_unlock(&data->stop_mutex);
+	return (stopped);
 }
 
 void	custom_sleep(t_shared *data, long duration_in_ms)
