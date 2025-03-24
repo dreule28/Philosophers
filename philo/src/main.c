@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:37:57 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 17:09:40 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/07 17:19:54 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	main(int argc, char **argv)
 	}
 	data.philosophers = set_table(&data);
 	if (!data.philosophers)
-		return (1);
+	return (1);
 	create_threads(&data);
 	clear_up_table(&data);
 	return (0);

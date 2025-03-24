@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:46:11 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/07 16:25:20 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/07 17:45:42 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 
 void	log_action(t_shared *data, int philo_id, char *log_message)
 {
+	bool	stopped;
+	pthread_mutex_lock(&data->stop_mutex);
+	stopped = data->sim_stop;
+	pthread_mutex_unlock(&data->stop_mutex);
 	pthread_mutex_lock(&data->log_mutex);
-	if (!data->sim_stop)
+	if (!stopped)
 		printf("%ld %d %s\n", get_time_ms() - data->sim_start, philo_id,
 			log_message);
 	pthread_mutex_unlock(&data->log_mutex);
@@ -25,8 +29,7 @@ void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork)
 {
 	pthread_mutex_lock(&data->fork_mutexes[left_fork]);
 	log_action(data, philo->philo_id, "has taken a fork");
-	usleep(data->time_to_die * 1000);
-	log_action(data, philo->philo_id, "died");
+	custom_sleep(data, data->time_to_die);
 	pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
 }
 

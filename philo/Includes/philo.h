@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:44:02 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 17:17:18 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/07 16:12:30 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_shared
 	bool			sim_stop;
 	pthread_mutex_t	*fork_mutexes;
 	struct s_philo	*philosophers;
+	pthread_t		monitor;
 }	t_shared;
 
 typedef struct s_philo
@@ -71,7 +72,6 @@ t_philo	*set_table(t_shared *data);
 bool	init_forks(t_shared *data);
 bool	init_fork_mutexes(pthread_mutex_t *fork);
 t_philo	*init_philos(t_shared *data);
-t_philo	*init_philo(t_shared *data, int id);
 //Initing -- END
 
 //Threads -- BEGIN
@@ -83,6 +83,8 @@ int		chose_forks(t_shared *data, t_philo *philo, int left_fork,
 int		philo_eats(t_shared *data, t_philo *philo);
 int		philo_sleeps(t_shared *data, t_philo *philo);
 void	release_forks(t_shared *data, int left_fork, int right_fork);
+void	*monitor_routine(void *arg);
+void	create_and_join_monitor(t_shared *data);
 //Threads -- END
 
 //Cleaning -- BEGIN

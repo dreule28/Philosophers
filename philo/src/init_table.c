@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:18:15 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 17:09:22 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/07 17:36:57 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_philo	*init_philos(t_shared *data)
 	{
 		philos[i].data = data;
 		philos[i].philo_id = i + 1;
-		philos[i].time_last_meal = get_time_ms();
+		philos[i].time_last_meal = data->sim_start;
 		philos[i].times_eaten = 0;
 		i++;
 	}

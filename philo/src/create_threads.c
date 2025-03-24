@@ -6,14 +6,13 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/06 14:24:12 by dreule           ###   ########.fr       */
+/*   Updated: 2025/03/24 12:22:01 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 int	chose_forks(t_shared *data, t_philo *philo, int left_fork, int right_fork)
-{
 	if (philo->philo_id % 2 == 0)
 	{
 		pthread_mutex_lock(&data->fork_mutexes[right_fork]);
@@ -61,6 +60,7 @@ int	philo_eats(t_shared *data, t_philo *philo)
 	custom_sleep(data, 1);
 	if (simulation_stopped(data))
 		return (0);
+	get_time_ms();
 	return (1);
 }
 
@@ -83,6 +83,8 @@ void	*dining_routine(void *arg)
 	right_fork = philo->philo_id % data->nb_of_philos;
 	if (data->nb_of_philos == 1)
 		return (handle_one_philosopher(data, philo, left_fork), NULL);
+	if (philo->philo_id % 2 == 1)
+		custom_sleep(data, 1);
 	while (!simulation_stopped(data))
 	{
 		log_action(data, philo->philo_id, "is thinking");
@@ -102,7 +104,7 @@ void	*dining_routine(void *arg)
 
 void	create_threads(t_shared *data)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < data->nb_of_philos)
@@ -110,12 +112,16 @@ void	create_threads(t_shared *data)
 		if (pthread_create(&data->philosophers[i].thread, NULL, &dining_routine,
 				(void *)&data->philosophers[i]))
 		{
+			pthread_mutex_lock(&data->stop_mutex);
+			data->sim_stop = 1;
+			pthread_mutex_unlock(&data->stop_mutex);
 			printf("Error creating threads!");
 			cleanup_threads(data, i);
 			return ;
 		}
 		i++;
 	}
+	create_and_join_monitor(data);
 	i = 0;
 	while (i < data->nb_of_philos)
 	{
