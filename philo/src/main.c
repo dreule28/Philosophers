@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:37:57 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/07 17:19:54 by dreule           ###   ########.fr       */
+/*   Updated: 2025/04/15 10:57:47 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,26 @@ int	init_args(char **argv, t_shared *data)
 
 bool	check_args_and_init(char **argv, t_shared *data)
 {
+	int	i;
+
+	i = 0;
+	while(i++ <= 5 && argv[i])
+	{
+		if (ft_strlen(argv[i]) > 19)
+			return (error_init("Invalid Input: Number too larg!\n"), false);
+	}
 	if (ft_atoi(argv[1]) > 200 || ft_atoi(argv[1]) <= 0 || is_not_nb(argv[1]))
 		return (error_init("Invalid number_of_philosophers!\n"), false);
 	else if (ft_atoi(argv[2]) <= 0 || is_not_nb(argv[2]))
 		return (error_init("Invalid time_to_die!\n"), false);
-	if (ft_atoi(argv[3]) <= 0 || is_not_nb(argv[3]))
+	else if (ft_atoi(argv[3]) <= 0 || is_not_nb(argv[3]))
 		return (error_init("Invalid time_to_eat!\n"), false);
-	if (ft_atoi(argv[4]) <= 0 || is_not_nb(argv[4]))
+	else if (ft_atoi(argv[4]) <= 0 || is_not_nb(argv[4]))
 		return (error_init("Invalid time_to_sleep!\n"), false);
-	if (argv[5] && (ft_atoi(argv[5]) <= 0 || is_not_nb(argv[5])))
+	else if (argv[5] && (ft_atoi(argv[5]) <= 0 || is_not_nb(argv[5])))
 		return (error_init("Invalid number_of_meals!\n"), false);
 	if (!init_args(argv, data))
-	{
-		free(data);
 		return (false);
-	}
 	return (true);
 }
 
@@ -79,7 +84,7 @@ int	main(int argc, char **argv)
 	}
 	data.philosophers = set_table(&data);
 	if (!data.philosophers)
-	return (1);
+		return (1);
 	create_threads(&data);
 	clear_up_table(&data);
 	return (0);
@@ -90,3 +95,7 @@ int	main(int argc, char **argv)
 //--leak-check=full --show-leak-kinds=all --track-origins=yes
 // test values 5 800 200 200 7
 // test values 4 410 200 200
+// 4 310 200 100 10
+// 3 599 200 200 10
+// 31 599 200 200 10
+// 131 596 200 200 10
