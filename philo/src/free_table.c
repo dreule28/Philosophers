@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:56:39 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/05 17:09:15 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/12 10:13:46 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,4 @@ void	cleanup_threads(t_shared *data, int count)
 			printf("Failed to join threads\n");
 		i++;
 	}
-	free(data->philosophers);
 }
