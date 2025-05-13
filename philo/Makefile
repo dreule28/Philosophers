@@ -18,7 +18,7 @@ vpath %.c $(SRC_DIRS)
 ###############                  SOURCE FILES                     ##############
 ################################################################################
 
-SRC_FILES := main.c utils.c init_table.c create_threads.c free_table.c utils2.c monitor.c
+SRC_FILES := create_threads.c dining_routine.c eat_meals.c free_table.c init_table.c main.c monitor.c pick_forks.c utils.c utils2.c
 SRC := $(addprefix src/, $(SRC_FILES))
 
 ################################################################################
