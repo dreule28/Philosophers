@@ -5,101 +5,32 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/20 12:09:23 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/24 12:22:01 by dreule           ###   ########.fr       */
+/*   Created: 2025/05/13 18:18:07 by dreule            #+#    #+#             */
+/*   Updated: 2025/05/13 18:21:46 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	chose_forks(t_shared *data, t_philo *philo, int left_fork, int right_fork)
-	if (philo->philo_id % 2 == 0)
-	{
-		pthread_mutex_lock(&data->fork_mutexes[right_fork]);
-		log_action(data, philo->philo_id, "has taken a fork");
-		if (simulation_stopped(data))
-		{
-			pthread_mutex_unlock(&data->fork_mutexes[right_fork]);
-			return (0);
-		}
-		pthread_mutex_lock(&data->fork_mutexes[left_fork]);
-		log_action(data, philo->philo_id, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_lock(&data->fork_mutexes[left_fork]);
-		log_action(data, philo->philo_id, "has taken a fork");
-		if (simulation_stopped(data))
-		{
-			pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
-			return (0);
-		}
-		pthread_mutex_lock(&data->fork_mutexes[right_fork]);
-		log_action(data, philo->philo_id, "has taken a fork");
-	}
-	return (1);
-}
-
-int	philo_eats(t_shared *data, t_philo *philo)
+void	failed_dining(t_shared *data, int *i)
 {
-	log_action(data, philo->philo_id, "is eating");
-	pthread_mutex_lock(&data->status_mutex);
-	philo->time_last_meal = get_time_ms();
-	pthread_mutex_unlock(&data->status_mutex);
-	pthread_mutex_lock(&data->status_mutex);
-	philo->times_eaten++;
-	pthread_mutex_unlock(&data->status_mutex);
 	pthread_mutex_lock(&data->stop_mutex);
-	if (data->nb_of_meals > 0 && philo->times_eaten >= data->nb_of_meals)
-	{
-		data->philos_done_eating++;
-		if (data->philos_done_eating >= data->nb_of_philos)
-			data->sim_stop = 1;
-	}
+	data->sim_stop = 1;
 	pthread_mutex_unlock(&data->stop_mutex);
-	custom_sleep(data, 1);
-	if (simulation_stopped(data))
-		return (0);
-	get_time_ms();
-	return (1);
+	printf("Error creating threads!");
+	cleanup_threads(data, i);
+	return ;
 }
 
-void	release_forks(t_shared *data, int left_fork, int right_fork)
+void	create_and_join_monitor(t_shared *data)
 {
-	pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
-	pthread_mutex_unlock(&data->fork_mutexes[right_fork]);
-}
-
-void	*dining_routine(void *arg)
-{
-	t_philo		*philo;
-	t_shared	*data;
-	int			left_fork;
-	int			right_fork;
-
-	philo = (t_philo *)arg;
-	data = philo->data;
-	left_fork = philo->philo_id - 1;
-	right_fork = philo->philo_id % data->nb_of_philos;
-	if (data->nb_of_philos == 1)
-		return (handle_one_philosopher(data, philo, left_fork), NULL);
-	if (philo->philo_id % 2 == 1)
-		custom_sleep(data, 1);
-	while (!simulation_stopped(data))
+	if (pthread_create(&data->monitor, NULL, &monitor_routine, data))
 	{
-		log_action(data, philo->philo_id, "is thinking");
-		if (!chose_forks(data, philo, left_fork, right_fork))
-			break ;
-		if (!philo_eats(data, philo))
-		{
-			release_forks(data, left_fork, right_fork);
-			break ;
-		}
-		release_forks(data, left_fork, right_fork);
-		if (!philo_sleeps(data, philo))
-			break ;
+		printf("Error creating monitor!");
+		cleanup_threads(data, data->nb_of_philos);
+		return ;
 	}
-	return (NULL);
+	pthread_join(data->monitor, NULL);
 }
 
 void	create_threads(t_shared *data)
@@ -111,14 +42,7 @@ void	create_threads(t_shared *data)
 	{
 		if (pthread_create(&data->philosophers[i].thread, NULL, &dining_routine,
 				(void *)&data->philosophers[i]))
-		{
-			pthread_mutex_lock(&data->stop_mutex);
-			data->sim_stop = 1;
-			pthread_mutex_unlock(&data->stop_mutex);
-			printf("Error creating threads!");
-			cleanup_threads(data, i);
-			return ;
-		}
+			failed_dining(data, &i);
 		i++;
 	}
 	create_and_join_monitor(data);
