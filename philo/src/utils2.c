@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:46:11 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 13:07:31 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:14:59 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	custom_sleep(t_shared *data, long duration_in_ms)
 	while (!simulation_stopped(data))
 	{
 		if (get_time_ms() - start_time >= duration_in_ms)
-			break;
+			break ;
 		usleep(100);
 	}
 }

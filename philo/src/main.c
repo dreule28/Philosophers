@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:37:57 by dreule            #+#    #+#             */
-/*   Updated: 2025/04/15 10:57:47 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:14:28 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,11 @@ bool	check_args_and_init(char **argv, t_shared *data)
 	int	i;
 
 	i = 0;
-	while(i++ <= 5 && argv[i])
+	while (i <= 5 && argv[i])
 	{
 		if (ft_strlen(argv[i]) > 19)
 			return (error_init("Invalid Input: Number too larg!\n"), false);
+		i++;
 	}
 	if (ft_atoi(argv[1]) > 200 || ft_atoi(argv[1]) <= 0 || is_not_nb(argv[1]))
 		return (error_init("Invalid number_of_philosophers!\n"), false);
@@ -89,13 +90,3 @@ int	main(int argc, char **argv)
 	clear_up_table(&data);
 	return (0);
 }
-
-// dorker valgrind --tool=helgrind
-// dorker valgrind --tool=drd
-//--leak-check=full --show-leak-kinds=all --track-origins=yes
-// test values 5 800 200 200 7
-// test values 4 410 200 200
-// 4 310 200 100 10
-// 3 599 200 200 10
-// 31 599 200 200 10
-// 131 596 200 200 10
