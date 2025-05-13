@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:22:38 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 18:49:45 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:59:18 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,6 @@ void	handle_initial_timing(t_shared *data, t_philo *philo)
 		usleep(200);
 	else
 		usleep(0);
-}
-
-void	release_forks(t_shared *data, int left_fork, int right_fork)
-{
-	pthread_mutex_unlock(&data->fork_mutexes[left_fork]);
-	pthread_mutex_unlock(&data->fork_mutexes[right_fork]);
 }
 
 bool	philo_cycle(t_shared *data, t_philo *philo, int l_fork, int r_fork)
