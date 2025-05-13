@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:44:02 by dreule            #+#    #+#             */
-/*   Updated: 2025/03/07 16:12:30 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:24:27 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,46 +51,73 @@ typedef struct s_philo
 
 //Functions -- BEGIN
 
-//Parsing -- BEGIN
-bool	check_args_and_init(char **argv, t_shared *data);
-void	correct_usage(void);
-//Parsing -- END
-
-//Utils -- BEGIN
-bool	is_not_nb(char *argv);
-int		ft_atoi(const char *str);
-void	error_init(char *str);
-int		ft_strlen(char *str);
-time_t	get_time_ms(void);
-void	log_action(t_shared *data, int philo_id, char *log_message);
-bool	simulation_stopped(t_shared *data);
-void	custom_sleep(t_shared *data, long duration_in_ms);
-//Utils -- END
-
-//Initing -- BEGIN
-t_philo	*set_table(t_shared *data);
-bool	init_forks(t_shared *data);
-bool	init_fork_mutexes(pthread_mutex_t *fork);
-t_philo	*init_philos(t_shared *data);
-//Initing -- END
-
-//Threads -- BEGIN
-void	create_threads(t_shared *data);
-void	*dining_routine(void *arg);
-void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork);
-int		chose_forks(t_shared *data, t_philo *philo, int left_fork,
-			int right_fork);
-int		philo_eats(t_shared *data, t_philo *philo);
-int		philo_sleeps(t_shared *data, t_philo *philo);
-void	release_forks(t_shared *data, int left_fork, int right_fork);
-void	*monitor_routine(void *arg);
+//create_threads.c -- BEGIN
+void	failed_dining(t_shared *data, int *i);
 void	create_and_join_monitor(t_shared *data);
-//Threads -- END
+void	create_threads(t_shared *data);
+// create_threads.c -- END
 
-//Cleaning -- BEGIN
+//dining_routine.c -- BEGIN
+void	handle_initial_timing(t_shared *data, t_philo *philo);
+bool	philo_cycle(t_shared *data, t_philo *philo, int l_fork, int r_fork);
+void	*dining_routine(void *arg);
+//dining_routine.c -- END
+
+// eat_meals.c -- BEGIN
+void	release_forks(t_shared *data, int left_fork, int right_fork);
+int		philo_eats(t_shared *data, t_philo *philo);
+// eat_meals.c -- END
+
+//free_table.c -- BEGIN
 void	clear_up_table(t_shared *data);
 void	cleanup_threads(t_shared *data, int count);
-//Cleaning -- END
+//free_table.c -- END
+
+//init_table.c -- BEGIN
+t_philo	*init_philos(t_shared *data);
+bool	init_fork_mutexes(pthread_mutex_t *fork);
+bool	init_forks(t_shared *data);
+t_philo	*set_table(t_shared *data);
+//init_table.c -- END
+
+//main.c -- BEGIN
+bool	is_not_nb(char *argv);
+int		init_args(char **argv, t_shared *data);
+bool	check_args_and_init(char **argv, t_shared *data);
+//main.c -- END
+
+//monitor.c -- BEGIN
+bool	has_eaten_enough(t_shared *data, int philo_index);
+bool	check_philosopher_death(t_shared *data, int philo_i);
+bool	all_philosophers_done_eating(t_shared *data, int done_count);
+void	set_simulation_stop(t_shared *data);
+void	*monitor_routine(void *arg);
+//monitor.c -- END
+
+//pick_forks.c -- BEGIN
+void	delay_start(t_philo *philo);
+bool	try_to_take_fork(t_shared *data, t_philo *philo, int fork_id);
+bool	take_second_fork(t_shared *data, t_philo *philo, int f_fork,
+			int s_fork);
+int		chose_forks(t_shared *data, t_philo *philo, int left_fork,
+			int right_fork);
+//pick_forks.c -- END
+
+//utils.c -- BEGIN
+int		ft_atoi(const char *str);
+int		ft_strlen(char *str);
+void	error_init(char *str);
+time_t	get_time_ms(void);
+void	correct_usage(void);
+//utils.c -- END
+
+//utils2.c -- BEGIN
+void	log_action(t_shared *data, int philo_id, char *log_message);
+void	handle_one_philosopher(t_shared *data, t_philo *philo, int left_fork);
+bool	simulation_stopped(t_shared *data);
+void	custom_sleep(t_shared *data, long duration_in_ms);
+int		philo_sleeps(t_shared *data, t_philo *philo);
+//utils2.c -- END
 
 //Functions -- END
 
