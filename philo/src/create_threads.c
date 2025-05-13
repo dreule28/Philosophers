@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:18:07 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 18:21:46 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/13 19:02:49 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 void	failed_dining(t_shared *data, int *i)
 {
+	int	pos;
+
+	pos = *i;
 	pthread_mutex_lock(&data->stop_mutex);
 	data->sim_stop = 1;
 	pthread_mutex_unlock(&data->stop_mutex);
 	printf("Error creating threads!");
-	cleanup_threads(data, i);
+	cleanup_threads(data, pos);
 	return ;
 }
 
