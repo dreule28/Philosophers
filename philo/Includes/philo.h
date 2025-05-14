@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:44:02 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 19:24:27 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:36:01 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		philo_eats(t_shared *data, t_philo *philo);
 
 //free_table.c -- BEGIN
 void	clear_up_table(t_shared *data);
-void	cleanup_threads(t_shared *data, int count);
+void	save_threads(t_shared *data, int count);
 //free_table.c -- END
 
 //init_table.c -- BEGIN

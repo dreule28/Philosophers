@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:18:07 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 19:02:49 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:36:13 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	failed_dining(t_shared *data, int *i)
 	data->sim_stop = 1;
 	pthread_mutex_unlock(&data->stop_mutex);
 	printf("Error creating threads!");
-	cleanup_threads(data, pos);
+	save_threads(data, pos);
 	return ;
 }
 
@@ -30,7 +30,7 @@ void	create_and_join_monitor(t_shared *data)
 	if (pthread_create(&data->monitor, NULL, &monitor_routine, data))
 	{
 		printf("Error creating monitor!");
-		cleanup_threads(data, data->nb_of_philos);
+		save_threads(data, data->nb_of_philos);
 		return ;
 	}
 	pthread_join(data->monitor, NULL);

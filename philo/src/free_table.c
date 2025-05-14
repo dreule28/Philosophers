@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:56:39 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/12 10:13:46 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:35:52 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	clear_up_table(t_shared *data)
 	pthread_mutex_destroy(&data->stop_mutex);
 }
 
-void	cleanup_threads(t_shared *data, int count)
+void	save_threads(t_shared *data, int count)
 {
 	int	i;
 
