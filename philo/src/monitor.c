@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 15:20:19 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 19:26:10 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/14 12:14:28 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,22 @@ bool	has_eaten_enough(t_shared *data, int philo_index)
 		&& data->philosophers[philo_index].times_eaten >= data->nb_of_meals);
 }
 
-bool	check_philosopher_death(t_shared *data, int philo_i)
+bool	check_philosopher_death(t_shared *data, int i)
 {
-	long	now ;
+	long	now;
+	long	death_time;
+	long	time_since_last_meal;
+	int		philo_id;
 
 	now = get_time_ms();
-	if (now - data->philosophers[philo_i].time_last_meal > data->time_to_die)
+	time_since_last_meal = now - data->philosophers[i].time_last_meal;
+	if (time_since_last_meal > data->time_to_die)
 	{
-		log_action(data, data->philosophers[philo_i].philo_id, "died");
+		death_time = data->philosophers[i].time_last_meal + data->time_to_die;
+		philo_id = data->philosophers[i].philo_id;
+		pthread_mutex_lock(&data->log_mutex);
+		printf("%ld %d %s\n", death_time - data->sim_start, philo_id, "died");
+		pthread_mutex_unlock(&data->log_mutex);
 		set_simulation_stop(data);
 		return (true);
 	}
