@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:22:38 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/13 18:59:18 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/14 10:18:08 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	*dining_routine(void *arg)
 	data = philo->data;
 	left_fork = philo->philo_id - 1;
 	right_fork = philo->philo_id % data->nb_of_philos;
+	if (data->nb_of_philos == 1)
+		handle_one_philosopher(data, philo, left_fork);
 	handle_initial_timing(data, philo);
 	while (!simulation_stopped(data))
 	{
