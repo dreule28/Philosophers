@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:22:38 by dreule            #+#    #+#             */
-/*   Updated: 2025/05/14 10:18:08 by dreule           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:00:17 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	handle_initial_timing(t_shared *data, t_philo *philo)
 		custom_sleep(data, data->time_to_eat);
 	if (philo->philo_id % 2 == 0)
 		usleep(200);
-	else
-		usleep(0);
 }
 
 bool	philo_cycle(t_shared *data, t_philo *philo, int l_fork, int r_fork)
